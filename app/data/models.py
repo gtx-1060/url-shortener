@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-
 from sqlalchemy import Column, Text, Boolean, Enum, Integer, TIMESTAMP, ForeignKey
 from sqlalchemy.orm import relationship, backref
 
@@ -31,12 +30,13 @@ class Statistics(Base):
     visits = Column(Integer, default=0)
     last_visit = Column(TIMESTAMP, default=datetime.now())
     creation = Column(TIMESTAMP, default=datetime.now())
-    owner_id = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'), passive_deletes=True, nullable=False)
-    url_id = Column(Integer, ForeignKey('url.id', ondelete='CASCADE'), passive_deletes=True, nullable=False)
+    owner_id = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    url_id = Column(Integer, ForeignKey('url.id', ondelete='CASCADE'),  nullable=False)
 
 
 class Url(Base):
     __tablename__ = 'url'
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     original_url = Column(Text, nullable=False)
     shorted_url = Column(Text, nullable=False)
     configuration = relationship('Configuration', passive_deletes=True)
