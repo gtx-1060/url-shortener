@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import Column, Text, Boolean, Enum, Integer, TIMESTAMP, ForeignKey
 from sqlalchemy.orm import relationship, backref
 
-from app.data.db.db import Base
+from app.data.db.actual_db import Base
 from app.dtos.privacy_modes import PrivacyModes
 
 
@@ -38,6 +38,6 @@ class Url(Base):
     __tablename__ = 'url'
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     original_url = Column(Text, nullable=False)
-    shorted_url = Column(Text, nullable=False)
+    shorted_url = Column(Text, nullable=False, index=True, unique=True)
     configuration = relationship('Configuration', passive_deletes=True)
-    statistics = relationship('Statistics', passive_deletes=True)
+    statistics = relationship('Statistics', backref=backref('url', cascade="all, delete"), passive_deletes=True)

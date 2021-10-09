@@ -3,8 +3,10 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from app import utils
+from app.routers.schorturl_router import router as url_router
 
 app = FastAPI()
+app.include_router(url_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=['http://localhost', "http://127.0.0.1:3005"],
