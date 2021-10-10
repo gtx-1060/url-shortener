@@ -1,5 +1,3 @@
-from sqlalchemy import create_engine
-
 from app import utils
 
 
@@ -9,19 +7,12 @@ def load_env_data():
 
 def create_tables():
     load_env_data()
-
-    from app.data.db.db import Base, SQLALCHEMY_DATABASE_URL
-    from app.data.models import User, Url, Statistics, Configuration
-
-    engine = create_engine(SQLALCHEMY_DATABASE_URL, pool_recycle=3600)
-    Base.metadata.create_all(engine)
+    from app.data.db.db import SyncBase, engine
+    from app.data.models import Url, User, Configuration, Statistics
+    SyncBase.metadata.create_all(engine)
 
 
 def drop_tables():
     load_env_data()
-
-    from app.data.db.db import Base, SQLALCHEMY_DATABASE_URL
-    from app.data.models import User, Url, Statistics, Configuration
-
-    engine = create_engine(SQLALCHEMY_DATABASE_URL, pool_recycle=3600)
-    Base.metadata.drop_all(engine)
+    from app.data.db.db import SyncBase, engine
+    SyncBase.metadata.drop_all(engine)

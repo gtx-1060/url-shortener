@@ -47,3 +47,7 @@ class UrlComplete(Url):
 
     class Config:
         orm_mode = True
+
+
+class TokenData(BaseModel):
+    user_id: int

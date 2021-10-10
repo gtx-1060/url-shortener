@@ -1,19 +1,24 @@
-from typing import Optional, List
-
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.future import select
+from datetime import datetime
+from typing import List
 
 from app.data.dals.object_dal import ObjectDAL
-from app.data.models import Url, Configuration, Statistics
-from app.dtos.schemas import Configuration as ConfSchema, Url as UrlSchema
-from app.exceptions import BaseHTTPException
+from app.data.models import Statistics
 
 
 class UrlStatsDAL(ObjectDAL):
 
-    async def get_url_stats_of_user(self, user_id: int) -> List[Statistics]:
-        query = select(Statistics).where(Statistics.owner_id == user_id)
-        result = (await self.session.execute(query)).scalars().all()
-        if result is None:
+    def get_url_stats_of_user(self, user_id: int) -> List[Statistics]:
+        stats = self.session.query(Statistics).first(Statistics.owner_id == user_id).all()
+        if stats is None:
             return []
-        return result
+        return stats
+
+    def update_stats(self, stats_id: int, new_visits: int = None, last_visit: datetime = None):
+        stats = self.session.query(Statistics).filter(Statistics.id == stats_id).first()
+        UrlStatsDAL.chk_val(stats)
+        if new_visits:
+            stats.visits += new_visits
+        if last_visit:
+            stats.last_visit = last_visit
+        self.session.add(stats)
+        self.session.commit()

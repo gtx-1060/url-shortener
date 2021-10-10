@@ -3,9 +3,11 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from app import utils
+from app.middleware.database_session_middleware import DatabaseSessionMiddleware
 from app.routers.schorturl_router import router as url_router
 
 app = FastAPI()
+app.middleware('http')(DatabaseSessionMiddleware())
 app.include_router(url_router)
 app.add_middleware(
     CORSMiddleware,
@@ -17,7 +19,7 @@ app.add_middleware(
 
 
 @app.on_event('startup')
-def on_start():
+async def on_start():
     utils.load_env_variables()
 
 

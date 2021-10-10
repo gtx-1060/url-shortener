@@ -11,15 +11,14 @@ from app.exceptions import BaseHTTPException
 
 class UserDAL(ObjectDAL):
 
-    async def get_user(self, user_id: int) -> User:
-        query = select(User).where(User.id == id)
-        result = await self.session.execute(query)
-        return await UserDAL.chk_val(result.scalars().first())
+    def get_user(self, user_id: int) -> User:
+        user = self.session.query(User).filter(User.id == user_id).first()
+        return await UserDAL.chk_val(user)
 
-    async def create_user(self, username: str, password_hash: str) -> User:
+    def create_user(self, username: str, password_hash: str) -> User:
         user = User(username=username, password=password_hash)
         self.session.add(user)
-        await self.session.commit()
-        await self.session.refresh(user)
+        self.session.commit()
+        self.session.refresh(user)
         return user
 

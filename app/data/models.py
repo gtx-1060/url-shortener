@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import Column, Text, Boolean, Enum, Integer, TIMESTAMP, ForeignKey
 from sqlalchemy.orm import relationship, backref
 
-from app.data.db.actual_db import Base
+from app.data.db.db import SyncBase as Base
 from app.dtos.privacy_modes import PrivacyModes
 
 
