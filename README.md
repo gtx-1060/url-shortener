@@ -42,3 +42,14 @@ poetry run server
 - Possibility to register for private link statistics
 - Deleting a link after the expiration of visits/time (in progress)
 - Bots protection (in progress)
+
+## Documentation
+You can open interactive *Swagger UI* documentaion in <your-hostname>/docs
+```
+http://<your-hostname>/docs
+```
+by default
+ ```
+http://127.0.0.1:8000/docs
+```
+ 
