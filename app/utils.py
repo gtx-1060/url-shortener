@@ -9,6 +9,7 @@ from passlib.context import CryptContext
 from starlette.requests import Request
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+load_dotenv()
 SECRET_KEY = os.environ.get('SECRET_KEY')
 ALGORITHM = "HS256"
 

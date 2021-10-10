@@ -9,7 +9,7 @@ from app.dtos.privacy_modes import PrivacyModes
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    username = Column(Text, nullable=False)
+    username = Column(Text, nullable=False, unique=True)
     password = Column(Text, default=False)
     url_statistics = relationship("Statistics", backref=backref("owner", cascade="all, delete"), passive_deletes=True)
 
@@ -30,7 +30,7 @@ class Statistics(Base):
     visits = Column(Integer, default=0)
     last_visit = Column(TIMESTAMP, default=datetime.now())
     creation = Column(TIMESTAMP, default=datetime.now())
-    owner_id = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    owner_id = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'), nullable=True)
     url_id = Column(Integer, ForeignKey('url.id', ondelete='CASCADE'),  nullable=False)
 
 

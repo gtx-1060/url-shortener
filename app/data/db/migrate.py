@@ -15,4 +15,5 @@ def create_tables():
 def drop_tables():
     load_env_data()
     from app.data.db.db import SyncBase, engine
+    from app.data.models import Url, User, Configuration, Statistics
     SyncBase.metadata.drop_all(engine)

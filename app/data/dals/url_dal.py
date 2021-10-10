@@ -1,3 +1,4 @@
+from sqlalchemy import desc
 
 from app.data.dals.object_dal import ObjectDAL
 from app.data.models import Url, Configuration, Statistics
@@ -14,6 +15,7 @@ class UrlDAL(ObjectDAL):
     def create_url(self, url: str, short_url: str, owner_id: int, configuration: ConfigurationSchema) -> Url:
         url = Url(shorted_url=short_url, original_url=url)
         self.session.add(url)
+        self.session.commit()
         self.session.refresh(url)
         conf_model = Configuration(url_id=url.id)
         if configuration:
@@ -24,9 +26,14 @@ class UrlDAL(ObjectDAL):
         self.session.add(conf_model)
         stats = Statistics(url_id=url.id)
         if owner_id:
-            stats.owner_id=owner_id
+            stats.owner_id = owner_id
         self.session.add(stats)
         self.session.commit()
         self.session.refresh(url)
         return url
 
+    def remove_url(self, short_url: str):
+        self.session.query(Url).filter(Url.shorted_url == short_url).delete()
+
+    def get_last_url(self):
+        return self.session.query(Url).order_by(desc(Url.id)).first()

@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app import utils
 
+utils.load_env_variables()
 v = utils.get_db_variables()
 SQLALCHEMY_DATABASE_URL = f'postgresql+psycopg2://{v["USER"]}:{v["PASSWORD"]}@{v["HOST"]}/{v["NAME"]}'
 

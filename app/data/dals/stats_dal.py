@@ -13,8 +13,8 @@ class UrlStatsDAL(ObjectDAL):
             return []
         return stats
 
-    def update_stats(self, stats_id: int, new_visits: int = None, last_visit: datetime = None):
-        stats = self.session.query(Statistics).filter(Statistics.id == stats_id).first()
+    def update_stats(self, url_id: int, new_visits: int = None, last_visit: datetime = None):
+        stats = self.session.query(Statistics).filter(Statistics.url_id == url_id).first()
         UrlStatsDAL.chk_val(stats)
         if new_visits:
             stats.visits += new_visits
