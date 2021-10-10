@@ -44,7 +44,7 @@ poetry run server
 - Bots protection (in progress)
 
 ## Documentation
-You can open interactive *Swagger UI* documentaion in <your-hostname>/docs
+You can open interactive *Swagger UI* documentaion in
 ```
 http://<your-hostname>/docs
 ```
