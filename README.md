@@ -10,7 +10,7 @@ If you get the following
 ```shell script
 Python 3.>7.*
 ```
-this script has been tested and confirmed to be supported.
+the app has been tested and confirmed to be supported.
 
 
 ## Installation
