@@ -1,4 +1,4 @@
-# url-shortener
+# Url Shortener REST API
  
  
 ## Compatibility
