@@ -19,7 +19,8 @@ the app has been tested and confirmed to be supported.
 ```shell script
 poetry install
 ```
-3. Then create *.env* file in the *app* package, copy these text there and change values to your own.
+3. Install [PostgreSQL database](https://www.postgresql.org/download/) and create database. *For example you can use [PgAdmin](https://www.pgadmin.org/) for easy setup.* 
+4. Then create *.env* file in the *app* package, copy these text there and change values to your own.
 ```
 DB_USER=YOUR_DB_USER
 DB_PASSWORD=YOUR_DB_PASSWORD
@@ -27,11 +28,11 @@ DB_HOST=YOUR_B_HOST
 DB_NAME=YOUR_DB_NAME
 SECRET_KEY=YOUR_SECRET_KEY_FOR_JWT_GENERATION
 ```
-3. Run following command in console to create database tables.
+5. Run following command in console to create database tables.
 ```shell script
 poetry run create_tables
 ```
-4. Then type it to launch server.
+6. Then type it to launch server.
 ```shell script
 poetry run server
 ```
