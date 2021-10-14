@@ -1,11 +1,12 @@
-import base64
-
+from hashids import Hashids
 from app.config import HOST, PORT
 
-
-def get_short_url_part(obj_id: int):
-    return base64.urlsafe_b64encode(str(100+obj_id).encode()).decode().replace('=', '0')
+hashids = Hashids()
 
 
-def format_to_url(symbols: str):
-    return "http://" + HOST + "/s/" + symbols + ":" + PORT, symbols
+def get_short_url_part(url_id: int):
+    return hashids.encode(url_id)
+
+
+def format_to_url(symbols: str) -> str:
+    return "http://" + HOST + "/s/" + symbols + ":" + PORT
