@@ -1,9 +1,8 @@
- import uvicorn
+import uvicorn
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from app import utils
-from app.config import HOST, PORT
+from app.env_variables_loader import env_variables
 from app.middleware.database_session_middleware import DatabaseSessionMiddleware
 from app.routers.schorturl_router import router as url_router
 from app.routers.auth_router import router as auth_router
@@ -14,7 +13,7 @@ app.include_router(url_router)
 app.include_router(auth_router)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['http://localhost', "http://127.0.0.1:3005"],
+    allow_origins=env_variables["ALLOW_ORIGINS"].split(" "),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
@@ -22,7 +21,7 @@ app.add_middleware(
 
 
 def start():
-    uvicorn.run('app.main:app', host=HOST)
+    uvicorn.run('app.main:app', host=env_variables["HOST"], port=int(env_variables["PORT"]))
 
 
 if __name__ == "__main__":

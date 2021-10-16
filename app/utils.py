@@ -14,14 +14,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 ALGORITHM = "HS256"
 
 
-def load_env_variables(path: Optional[str] = None):
-    if path:
-        path = os.path.abspath(path)
-        load_dotenv(path)
-        return
-    load_dotenv()
-
-
 def get_db_variables() -> dict:
     env = os.environ
     my_vars = \
