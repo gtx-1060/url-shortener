@@ -1,5 +1,6 @@
 from datetime import datetime
-from fastapi import APIRouter, Depends, Path
+from typing import Optional
+from fastapi import APIRouter, Depends, Path, Body
 from starlette.responses import Response, RedirectResponse
 
 from app.data.dals.stats_dal import UrlStatsDAL
@@ -12,7 +13,6 @@ from app.services.url_shorter_sevice import UrlShorter
 from app.utils import get_db
 
 router = APIRouter(
-    prefix="/s",
     tags=["url"],
     responses={404: {"description": "Not found"}},
 )
@@ -20,8 +20,9 @@ router = APIRouter(
 
 # creates short url
 # if user was authorized, he can use his custom url configuration
-@router.post('', response_model=Url)
-def create_short_url(url: str, configuration: Configuration, auth_data=Depends(try_auth_user), db=Depends(get_db)):
+@router.post('/url', response_model=Url)
+def create_short_url(url: str, configuration: Optional[Configuration] = Body(None),
+                     auth_data=Depends(try_auth_user), db=Depends(get_db)):
     if configuration and not auth_data:
         raise BaseHTTPException(403, "Auth to use your own custom url configuration")
     dal = UrlDAL(db)
@@ -36,7 +37,7 @@ def create_short_url(url: str, configuration: Configuration, auth_data=Depends(t
 # deletes url record from database
 # user can delete only his own url
 @router.delete('/{short_url}')
-def delete_short_url(short_url: str = Path(..., ), auth_data=Depends(auth_user), db=Depends(get_db)):
+def delete_short_url(short_url: str = Path(..., regex=r'\w{6}'), auth_data=Depends(auth_user), db=Depends(get_db)):
     dal = UrlDAL(db)
     url = dal.get_url(short_url)
     if url.statistics.owner_id != auth_data.user_id:
@@ -47,7 +48,7 @@ def delete_short_url(short_url: str = Path(..., ), auth_data=Depends(auth_user),
 
 # redirect user using short_url as path item
 @router.get('/{short_url}')
-def follow_link(short_url: str = Path(..., ), db=Depends(get_db)):
+def follow_link(short_url: str = Path(..., regex=r'\w{6}'), db=Depends(get_db)):
     url_dal = UrlDAL(db)
     url = url_dal.get_url(short_url)
     stats_dal = UrlStatsDAL(db)

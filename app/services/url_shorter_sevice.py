@@ -31,6 +31,5 @@ class UrlShorter:
 
     @staticmethod
     def __generate_hash(extra_salt=0):
-        tnow = int((time() * 100) % 100000000) + extra_salt
-        return base58.b58encode_int(tnow)
-
+        tnow = int((time() * 100 + extra_salt) % 10000000000)
+        return base58.b58encode_int(tnow).decode()

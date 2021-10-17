@@ -4,8 +4,9 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.env_variables_loader import env_variables
 from app.middleware.database_session_middleware import DatabaseSessionMiddleware
-from app.routers.schorturl_router import router as url_router
+from app.routers.schort_url_router import router as url_router
 from app.routers.auth_router import router as auth_router
+from app.services.url_shorter_sevice import UrlShorter
 
 app = FastAPI()
 app.middleware('http')(DatabaseSessionMiddleware())
@@ -18,6 +19,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
+UrlShorter()
 
 
 def start():
