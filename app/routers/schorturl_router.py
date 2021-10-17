@@ -1,6 +1,4 @@
 from datetime import datetime
-from typing import List
-
 from fastapi import APIRouter, Depends, Path
 from starlette.responses import Response, RedirectResponse
 
@@ -20,6 +18,8 @@ router = APIRouter(
 )
 
 
+# creates short url
+# if user was authorized, he can use his custom url configuration
 @router.post('', response_model=Url)
 def create_short_url(url: str, configuration: Configuration, auth_data=Depends(try_auth_user), db=Depends(get_db)):
     if configuration and not auth_data:
@@ -33,16 +33,21 @@ def create_short_url(url: str, configuration: Configuration, auth_data=Depends(t
     return dal.create_url(url, short_url, owner_id, configuration)
 
 
+# deletes url record from database
+# user can delete only his own url
 @router.delete('/{short_url}')
 def delete_short_url(short_url: str = Path(..., ), auth_data=Depends(auth_user), db=Depends(get_db)):
     dal = UrlDAL(db)
+    url = dal.get_url(short_url)
+    if url.statistics.owner_id != auth_data.user_id:
+        raise BaseHTTPException(403, "You can delete only your own url")
     dal.remove_url(short_url)
     return Response(status_code=200)
 
 
-# REDIRECT
+# redirect user using short_url as path item
 @router.get('/{short_url}')
-def follow_link(short_url: str = Path(..., regex='^$'), db=Depends(get_db)):
+def follow_link(short_url: str = Path(..., ), db=Depends(get_db)):
     url_dal = UrlDAL(db)
     url = url_dal.get_url(short_url)
     stats_dal = UrlStatsDAL(db)
@@ -51,6 +56,7 @@ def follow_link(short_url: str = Path(..., regex='^$'), db=Depends(get_db)):
     return RedirectResponse(url=url.original_url)
 
 
+# returns stats of url visits depends of access mode
 @router.get('/{short_url}/stats', response_model=Statistics)
 def get_all_stats(short_url: str, auth_data=Depends(auth_user), db=Depends(get_db)):
     url_dal = UrlDAL(db)
