@@ -10,7 +10,7 @@ from app.dtos.privacy_modes import PrivacyModes
 from app.dtos.schemas import Url, Configuration, Statistics
 from app.exceptions import BaseHTTPException
 from app.services.auth_service import try_auth_user, auth_user
-from app.services.url_shorter_sevice import get_short_url_part
+from app.services.url_shorter_sevice import UrlShorter
 from app.utils import get_db
 
 router = APIRouter(
@@ -25,11 +25,8 @@ def create_short_url(url: str, configuration: Configuration, auth_data=Depends(t
     if configuration and not auth_data:
         raise BaseHTTPException(403, "Auth to use your own custom url configuration")
     dal = UrlDAL(db)
-    last_url = dal.get_last_url()
-    next_id = 1
-    if last_url:
-        next_id += last_url.id
-    short_url = get_short_url_part(next_id)
+    shorter = UrlShorter()
+    short_url = shorter.get_short_url_part()
     owner_id = None
     if auth_data:
         owner_id = auth_data.user_id

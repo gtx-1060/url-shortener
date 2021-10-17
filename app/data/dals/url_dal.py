@@ -37,3 +37,9 @@ class UrlDAL(ObjectDAL):
 
     def get_last_url(self):
         return self.session.query(Url).order_by(desc(Url.id)).first()
+
+    def get_all_short_urls(self):
+        urls = self.session.query(Url.shorted_url).all()
+        if not urls:
+            return []
+        return urls
