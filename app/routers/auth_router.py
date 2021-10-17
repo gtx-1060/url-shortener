@@ -22,7 +22,7 @@ def login_user(form: OAuth2PasswordRequestForm = Depends(), db=Depends(get_db)):
 
 
 # returns some user data
-# indicates if jwt token is valid
+# actually indicates whether jwt token is valid
 @router.get('/me', response_model=User)
 def get_me(auth_data=Depends(auth_user), db=Depends(get_db)):
     dal = UserDAL(db)
