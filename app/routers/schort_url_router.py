@@ -9,6 +9,7 @@ from app.dtos.privacy_modes import PrivacyModes
 from app.dtos.schemas import Url, Configuration, Statistics
 from app.exceptions import BaseHTTPException
 from app.services.auth_service import try_auth_user, auth_user
+from app.services.url_lifecycle_service import check_url_visits_remained
 from app.services.url_shorter_sevice import UrlShorter
 from app.utils import get_db
 
@@ -53,7 +54,7 @@ def follow_link(short_url: str = Path(..., regex=r'\w{6}'), db=Depends(get_db)):
     url = url_dal.get_url(short_url)
     stats_dal = UrlStatsDAL(db)
     stats_dal.update_stats(url.id, 1, datetime.now())
-    print(url.original_url)
+    check_url_visits_remained(url, db)
     return RedirectResponse(url=url.original_url)
 
 

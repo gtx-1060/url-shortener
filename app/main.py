@@ -6,6 +6,8 @@ from app.env_variables_loader import env_variables
 from app.middleware.database_session_middleware import DatabaseSessionMiddleware
 from app.routers.schort_url_router import router as url_router
 from app.routers.auth_router import router as auth_router
+from app.services.schedule_service import myscheduler
+from app.services.url_lifecycle_service import start_expire_tracking
 from app.services.url_shorter_sevice import UrlShorter
 
 app = FastAPI()
@@ -21,6 +23,17 @@ app.add_middleware(
 )
 
 UrlShorter()
+
+
+@app.on_event("startup")
+def on_start():
+    myscheduler.start()
+    start_expire_tracking(myscheduler)
+
+
+@app.on_event("shutdown")
+def on_start():
+    myscheduler.stop()
 
 
 def start():

@@ -1,3 +1,5 @@
+from typing import List
+
 from sqlalchemy import desc
 
 from app.data.dals.object_dal import ObjectDAL
@@ -34,6 +36,14 @@ class UrlDAL(ObjectDAL):
 
     def remove_url(self, short_url: str):
         self.session.query(Url).filter(Url.shorted_url == short_url).delete()
+
+    def remove_by_id(self, url_id: int):
+        self.session.query(Url).filter(Url.id == id).delete()
+        self.session.commit()
+
+    def remove_urls(self, ids: List[int]):
+        self.session.query(Url).filter(Url.id.in_(ids)).delete()
+        self.session.commit()
 
     def get_last_url(self):
         return self.session.query(Url).order_by(desc(Url.id)).first()

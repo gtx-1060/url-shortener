@@ -9,7 +9,7 @@ from app.data.db.db import SQLALCHEMY_DATABASE_URL
 from app.exceptions import BaseHTTPException
 
 
-class __MyScheduler:
+class _MyScheduler:
     __scheduler: AsyncIOScheduler
 
     def __init__(self):
@@ -70,4 +70,4 @@ class __MyScheduler:
         return False
 
 
-myscheduler = __MyScheduler()
+myscheduler = _MyScheduler()
